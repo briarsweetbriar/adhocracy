@@ -1,3 +1,3 @@
-= Adhocracy {<img src="https://codeclimate.com/github/timothycommoner/adhocracy.png" />}[https://codeclimate.com/github/timothycommoner/adhocracy]
+= Adhocracy {<img src="https://badge.fury.io/rb/adhocracy.png" alt="Gem Version" />}[http://badge.fury.io/rb/adhocracy] {<img src="https://travis-ci.org/timothycommoner/adhocracy.png?branch=master" alt="Build Status" />}[https://travis-ci.org/timothycommoner/adhocracy] {<img src="https://codeclimate.com/github/timothycommoner/adhocracy.png" />}[https://codeclimate.com/github/timothycommoner/adhocracy]
 
 A group management engine for Rails.
