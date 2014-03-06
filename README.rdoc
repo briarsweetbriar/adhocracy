@@ -1,0 +1,3 @@
+= Adhocracy
+
+A group management engine for Rails.
