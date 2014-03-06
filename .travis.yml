@@ -8,3 +8,10 @@ before_script:
 script:
 - RAILS_ENV=test bundle exec rake db:migrate --trace
 - bundle exec rspec spec
+deploy:
+  provider: rubygems
+  api_key:
+    secure: 46cPLbyY3n71/ZCDerK3fLR8tgvmxh1W1166tyLf9XA1f2AcdcIjee45abBWyz8jys5cnRaV9dvjR8JywW4wZ3x4JM33ExqEmuE5FHIoWXIJNp98kh7gl5jDb99uLKW5NmHpZfbU0nd08jihjCLUd14Kv4P5UuHmuJ4efUF239w=
+  gem: adhocracy
+  on:
+    repo: timothycommoner/adhocracy
