@@ -1,0 +1,14 @@
+en:
+  activerecord:
+    errors:
+      models:
+        membership:
+          not_unique: "Membership already exists."
+        membership_invitation:
+          still_pending: "Invitation still pending."
+          already_declined: "Cannot invite member again."
+          already_a_member: "Already a member."
+        membership_request:
+          still_pending: "Request still pending."
+          already_declined: "Cannot request membership again."
+          already_a_member: "Already a member."

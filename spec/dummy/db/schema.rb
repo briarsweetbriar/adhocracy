@@ -21,9 +21,9 @@ ActiveRecord::Schema.define(version: 20140306214620) do
     t.integer  "member_id"
     t.string   "group_type"
     t.integer  "group_id"
-    t.boolean  "pending",     null: false
-    t.boolean  "approved",    null: false
-    t.boolean  "declined",    null: false
+    t.boolean  "pending",     default: true,  null: false
+    t.boolean  "accepted",    default: false, null: false
+    t.boolean  "declined",    default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -35,9 +35,9 @@ ActiveRecord::Schema.define(version: 20140306214620) do
     t.integer  "member_id"
     t.string   "group_type"
     t.integer  "group_id"
-    t.boolean  "pending",     null: false
-    t.boolean  "approved",    null: false
-    t.boolean  "declined",    null: false
+    t.boolean  "pending",     default: true,  null: false
+    t.boolean  "accepted",    default: false, null: false
+    t.boolean  "declined",    default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

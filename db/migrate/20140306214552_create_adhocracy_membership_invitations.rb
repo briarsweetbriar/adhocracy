@@ -6,9 +6,9 @@ class CreateAdhocracyMembershipInvitations < ActiveRecord::Migration
       t.string :group_type
       t.integer :group_id
 
-      t.boolean :pending, null: false, defualt: true
-      t.boolean :approved, null: false, defualt: false
-      t.boolean :declined, null: false, defualt: false
+      t.boolean :pending, null: false, default: true
+      t.boolean :accepted, null: false, default: false
+      t.boolean :declined, null: false, default: false
 
       t.timestamps
     end
