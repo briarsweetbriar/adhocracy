@@ -1,3 +1,168 @@
 = Adhocracy {<img src="https://badge.fury.io/rb/adhocracy.png" alt="Gem Version" />}[http://badge.fury.io/rb/adhocracy] {<img src="https://travis-ci.org/timothycommoner/adhocracy.png?branch=master" alt="Build Status" />}[https://travis-ci.org/timothycommoner/adhocracy] {<img src="https://coveralls.io/repos/timothycommoner/adhocracy/badge.png" alt="Coverage Status" />}[https://coveralls.io/r/timothycommoner/adhocracy] {<img src="https://codeclimate.com/github/timothycommoner/adhocracy.png" />}[https://codeclimate.com/github/timothycommoner/adhocracy]
 
 A group management engine for Rails.
+
+== Compatibility
+
+Adhocracy is a Rails Engine, which means it plays best with Rails applications. So far, it's only been tested with Rails 4.
+
+== Usage
+
+=== Installation
+
+1. Add Adhocracy to your gemfile: `gem 'adhocracy'`
+2. Run bundler: `bundle install`
+3. Run this in your app folder: `rake adhocracy:install:migrations`
+4. Run your migrations: `rake db:migrate`
+5. Add `acts_as_group` to the models you want to have group functionality
+6. Add `acts_as_member` to the models you want to have member functionality
+
+=== Creating Groups and Members
+
+Scenario: You want your Club model to have group functionality. Ideally, it'll accept members from both the Student and Teacher model.
+
+First, add `acts_as_group` to your Club model:
+
+    class Club < ActiveRecord::Base
+      acts_as_group
+    end
+
+Then, add 'acts_as_member' to your Student and Teacher models:
+
+    class Student < ActiveRecord::Base
+      acts_as_member
+    end
+
+    class Teacher < ActiveRecord::Base
+      acts_as_member
+    end
+
+After that, you can add members to your Club by:
+
+    @club.add_member(@student)
+    @student.join_group(@club)
+    @teacher.join_group(@club)
+
+List the current members:
+
+    @club.members # => returns an array with @student and @teacher in it
+
+Or list the groups a member is a part of:
+
+    @student.groups # => returns an array with only @club
+
+Check for membership:
+
+    @student.member_of?(@club) # => true
+    @club.has_member?(@teacher) # => true
+
+And destroy memberships
+
+    @student.leave_group(@club)
+    @group.remove_member(@teacher)
+
+=== Inviting Members
+
+Scenario: You want your users to have control over which groups they join.
+
+Groups can send invitations to users:
+
+    @club.invite_member(@student)
+    @student.groups # => does not yet include @club
+    @student.group_invitations # => array including @club
+
+The user can either accept or decline:
+
+    @invitation = @student.membership_invitations.first
+    @invitation.accept
+    - or -
+    @invitation.decline
+
+If they accept, then they become a member of the group.
+
+Invitations can be queried for their state of acceptance:
+
+    @invitation.pending?
+    @invitation.accepted?
+    @invitation.declined?
+
+You can also check to see if an invitation is already sent:
+
+    @student.invited_to?(@club)
+    @club.invited?(@student)
+
+These checks can include the state of the invitation:
+
+    @student.invited_to?(@club, { pending: true })
+    @student.invited_to?(@club, { accepted: false })
+    @student.invited_to?(@club, { declined: false })
+
+=== Requesting Membership
+
+Scenario: You want your groups to have control over which users join them.
+
+Interested users can send membership requests to groups:
+
+    @student.request_membership_in(@club)
+    @club.members # => does not yet include @student
+    @club.membership_requests # => array including @student
+
+The group can either accept or decline:
+
+    @request = @club.membership_requests.first
+    @request.accept
+    - or -
+    @request.decline
+
+Requests can be queried for their state of acceptance:
+
+    @request.pending?
+    @request.accepted?
+    @request.declined?
+
+You can also check to see if a request is already sent:
+
+    @student.requested_membership_in?(@club)
+    @club.recieved_request_from?(@student)
+
+These checks can include the state of the request:
+
+    @student.requested_membership_in?(@club, { pending: true })
+    @student.requested_membership_in?(@club, { accepted: false })
+    @student.requested_membership_in?(@club, { declined: false })
+
+=== Nesting Groups
+
+Scenario: You want your Company model to have many subsidiary companies.
+
+Create a model that both `acts_as_group` and `acts_as_member`:
+
+    class Company < ActiveRecord::Base
+      acts_as_group
+      acts_as_member
+    end
+
+You can then nest companies like you would any other member:
+
+    @company.add_member(@child_company)
+    @child_company.add_member(@grand_child_company)
+
+== Limitations
+
+Unfortunately, Rails does not support `has_many through` relationships that pass through a polymorphic join table, which we do in Adhocracy. In order to work around this limitation, we've created pseudo-associations, such as `@club.members` and `@user.groups`. These pseudo-associations return a simple array, rather than the feature-packed associations Rails typically uses. This means you can't chain in scopes or use commands like `@user.groups.create`. If you know of a way we can reincorporate Rails associations without losing our ability to join groups and members polymorphically, please share your thoughts!
+
+== Issues
+
+Adhocracy is still very young, and both its functionality and its documentation are bound to be lacking. If you're having trouble with something, feel free to open an issue.
+
+== Contributing
+
+Feel free to send us a pull request. Public methods, callbacks, and validations should have Rspec tests to back them up.
+
+=== Contributors
+
+Timothy Baron
+
+== License
+
+Released under the MIT license.
