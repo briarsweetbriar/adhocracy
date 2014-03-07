@@ -118,6 +118,12 @@ module Adhocracy
         expect(@user.requested_membership_in?(@adhoc, { pending: true })).
           to be false
       end
+
+      it "accepting requested groups if they've already invited membership" do
+        @adhoc.invite_member(@user)
+        expect(@user.request_membership_in(@adhoc).valid?).to be false
+        expect(@user.groups).to include @adhoc
+      end
     end
 
     context "handles prospective groups by" do

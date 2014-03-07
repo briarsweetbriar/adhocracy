@@ -156,6 +156,12 @@ module Adhocracy
         @adhoc.add_member(@user)
         expect(@adhoc.invite_member(@user).valid?).to be false
       end
+
+      it "accepting invited members if they've requested membership" do
+        @user.request_membership_in(@adhoc)
+        expect(@adhoc.invite_member(@user).valid?).to be false
+        expect(@adhoc.members).to include @user
+      end
     end
 
     context "destroys memberships" do

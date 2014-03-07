@@ -8,7 +8,9 @@ en:
           still_pending: "Invitation still pending."
           already_declined: "Cannot invite member again."
           already_a_member: "Already a member."
+          other_party_had_pending_request: "The member already sent a request. Membership automatically accepted."
         membership_request:
           still_pending: "Request still pending."
           already_declined: "Cannot request membership again."
           already_a_member: "Already a member."
+          other_party_had_pending_request: "The group already sent an invitation. Membership automatically accepted."
