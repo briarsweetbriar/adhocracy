@@ -10,6 +10,9 @@ Spork.prefork do
   require 'database_cleaner'
   require 'shoulda'
   require 'debugger'
+  require 'coveralls'
+
+  Coveralls.wear!('rails')
 
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
