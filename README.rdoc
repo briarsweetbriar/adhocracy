@@ -19,7 +19,7 @@ Adhocracy is a Rails Engine, which means it plays best with Rails applications. 
 
 === Creating Groups and Members
 
-Scenario: You want your Club model to have group functionality. Ideally, it'll accept members from both the Student and Teacher model.
+_Scenario: You want your Club model to have group functionality. Ideally, it'll accept members from both the Student and Teacher model._
 
 First, add `acts_as_group` to your Club model:
 
@@ -63,7 +63,7 @@ And destroy memberships
 
 === Inviting Members
 
-Scenario: You want your users to have control over which groups they join.
+_Scenario: You want your users to have control over which groups they join._
 
 Groups can send invitations to users:
 
@@ -99,7 +99,7 @@ These checks can include the state of the invitation:
 
 === Requesting Membership
 
-Scenario: You want your groups to have control over which users join them.
+_Scenario: You want your groups to have control over which users join them._
 
 Interested users can send membership requests to groups:
 
@@ -133,7 +133,7 @@ These checks can include the state of the request:
 
 === Nesting Groups
 
-Scenario: You want your Company model to have many subsidiary companies.
+_Scenario: You want your Company model to have many subsidiary companies._
 
 Create a model that both `acts_as_group` and `acts_as_member`:
 
