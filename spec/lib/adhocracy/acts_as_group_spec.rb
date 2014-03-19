@@ -89,6 +89,15 @@ module Adhocracy
         expect(@adhoc.has_member?(@user)).to be false
       end
 
+      it "if an officer exists and returns true if it does" do
+        @adhoc.add_officer(@user)
+        expect(@adhoc.has_officer?(@user)).to be true
+      end
+
+      it "if an officer exists and returns false if it does not" do
+        expect(@adhoc.has_officer?(@user)).to be false
+      end
+
       it "if an invitation exists and returns true if it does" do
         @adhoc.invite_member(@user)
         expect(@adhoc.invited?(@user)).to be true
@@ -155,7 +164,7 @@ module Adhocracy
 
       it "not creating duplicate officers" do
         @adhoc.add_officer(@user)
-        expect(@adhoc.add_officer(@user).valid?).to be false
+        expect(@adhoc.add_officer(@user)).to be false
       end
 
       it "inviting members" do
@@ -211,23 +220,13 @@ module Adhocracy
 
       it "if the member is a non-officer" do
         @adhoc.add_member(@user)
-        @adhoc.promote_to_officer(@user)
-        expect(@adhoc.officers).to include @user
-      end
-
-      it "if the member is a non-officer member (and add_officer is used)" do
-        @adhoc.add_member(@user)
         @adhoc.add_officer(@user)
         expect(@adhoc.officers).to include @user
-      end
-
-      it "but returns false if the user is not a member" do
-        expect(@adhoc.promote_to_officer(@user)).to be false
       end
 
       it "but returns false if the member is already an officer" do
         @adhoc.add_officer(@user)
-        expect(@adhoc.promote_to_officer(@user)).to be false
+        expect(@adhoc.add_officer(@user)).to be false
       end
     end
 

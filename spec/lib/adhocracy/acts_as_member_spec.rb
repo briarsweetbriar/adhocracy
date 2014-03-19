@@ -30,7 +30,7 @@ module Adhocracy
         @adhoc4 = FactoryGirl.create(:adhoc)
         @adhoc5 = FactoryGirl.create(:adhoc)
         @user.join_group(@adhoc1)
-        @user.join_group(@adhoc3)
+        @user.promote(@adhoc3)
         @adhoc4.invite_member(@user)
         @user.request_membership_in(@adhoc5)
       end
@@ -41,6 +41,14 @@ module Adhocracy
 
       it "excluding non-joined groups" do
         expect(@user.groups).to_not include @adhoc2, @adhoc4, @adhoc5
+      end
+
+      it "including all administered groups" do
+        expect(@user.administrations).to include @adhoc3
+      end
+
+      it "excluding non-administered groups" do
+        expect(@user.administrations).to_not include @adhoc1, @adhoc2, @adhoc4, @adhoc5
       end
 
       it "including all invited groups" do
@@ -75,6 +83,15 @@ module Adhocracy
 
       it "if a membership exists and returns false if it does not" do
         expect(@user.member_of?(@adhoc)).to be false
+      end
+
+      it "if an officer exists and returns true if it does" do
+        @user.promote(@adhoc)
+        expect(@user.officer_of?(@adhoc)).to be true
+      end
+
+      it "if an officer exists and returns false if it does not" do
+        expect(@user.officer_of?(@adhoc)).to be false
       end
 
       it "if an invitation exists and returns true if it does" do
@@ -142,6 +159,16 @@ module Adhocracy
         expect(@user.join_group(@adhoc).valid?).to be false
       end
 
+      it "creating officers" do
+        @user.promote(@adhoc)
+        expect(@user.administrations).to include @adhoc
+      end
+
+      it "not creating duplicate officers" do
+        @user.promote(@adhoc)
+        expect(@user.promote(@adhoc)).to be false
+      end
+
       it "requesting memberships" do
         @user.request_membership_in(@adhoc)
         expect(@user.membership_requests).to include @adhoc
@@ -178,6 +205,41 @@ module Adhocracy
 
       it "but returns false if the membership does not exist" do
         expect(@user.leave_group(@adhoc)).to be false
+      end
+    end
+
+    context "promotes members to officers" do
+      before :each do
+        @adhoc = FactoryGirl.create(:adhoc)
+        @user = FactoryGirl.create(:user)
+      end
+
+      it "if the member is a non-officer" do
+        @user.promote(@adhoc)
+        expect(@adhoc.officers).to include @user
+      end
+
+      it "but returns false if the member is already an officer" do
+        @user.promote(@adhoc)
+        expect(@user.promote(@adhoc)).to be false
+      end
+    end
+
+    context "demotes officers" do
+      before :each do
+        @adhoc = FactoryGirl.create(:adhoc)
+        @user = FactoryGirl.create(:user)
+      end
+
+      it "if the member is an officer" do
+        @user.promote(@adhoc)
+        @user.demote(@adhoc)
+        expect(@adhoc.officers).to_not include @user
+      end
+
+      it "but returns false if the member is not an officer" do
+        @adhoc.add_member(@user)
+        expect(@user.demote(@adhoc)).to be false
       end
     end
 

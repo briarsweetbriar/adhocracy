@@ -68,14 +68,26 @@ Scenario: You want a special class of membership that has the privilege to edit 
 Adhocracy allows for administrative members called officers. You can create a new officer with:
 
     @club.add_officer(@student)
-
-Alternatively, if `@student` is already a member, you can promote her with:
-
-    @club.promote_to_officer(@student)
+    # or
+    @student.promote(@club)
 
 Later, you can strip an officer of her title with:
 
     @club.demote_officer(@student)
+    # or
+    @student.demote(@club)
+
+You can check if a member is an officer with:
+
+    @club.has_officer?(@member)
+    # or
+    @member.officer_of?(@club)
+
+Or get a full list of officers:
+
+    @club.officers
+    # or of administered groups
+    @member.administrations
 
 === Inviting Members
 

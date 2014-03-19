@@ -44,15 +44,14 @@ module Adhocracy
 
       def add_officer(member)
         membership = Adhocracy::Membership.where(member: member, group: self).
-          first_or_create(officer: true)
-        promote_to_officer(member, membership) unless membership.officer?
-        membership
-      end
-
-      def promote_to_officer(member, membership = nil)
-        membership ||= Adhocracy::Membership.find_by(member: member, group: self)
-        return false if !membership.present? || membership.officer?
-        return membership.update_column(:officer, true)
+          first_or_initialize(officer: true)
+        if membership.new_record?
+          membership.save
+        else
+          return false if membership.officer?
+          membership.update_column(:officer, true)
+        end
+        return membership
       end
 
       def demote_officer(member)
@@ -73,6 +72,11 @@ module Adhocracy
 
       def has_member?(member)
         MembershipAssociation.new(member: member, group: self).verify_membership
+      end
+
+      def has_officer?(member)
+        Adhocracy::Membership.where(member: member, group: self,
+          officer: true).exists?
       end
 
       def invited?(member, params = {})

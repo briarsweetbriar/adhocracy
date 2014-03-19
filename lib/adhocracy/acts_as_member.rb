@@ -10,6 +10,8 @@ module Adhocracy
           class_name: "Adhocracy::MembershipInvitation"
         has_many :membership_requests, as: :member,
           class_name: "Adhocracy::MembershipRequest"
+        has_many :officer_memberships, -> { where officer: true }, as: :member,
+          class_name: "Adhocracy::Membership"
 
         send :include, InstanceMethods
       end
@@ -18,6 +20,11 @@ module Adhocracy
     module InstanceMethods
       def groups
         MembershipAssociation.new(member: self).list_groups_for_membership
+      end
+
+      def administrations
+        Adhocracy::Membership.where(member: self, officer: true).
+          includes(:group).collect { |membership| membership.group }
       end
 
       def group_invitations
@@ -34,6 +41,24 @@ module Adhocracy
         MembershipAssociation.new(member: self, group: group).create_membership
       end
 
+      def promote(group)
+        membership = Adhocracy::Membership.where(member: self, group: group).
+          first_or_initialize(officer: true)
+        if membership.new_record?
+          membership.save
+        else
+          return false if membership.officer?
+          membership.update_column(:officer, true)
+        end
+        return membership
+      end
+
+      def demote(member)
+        membership = Adhocracy::Membership.find_by(member: self, group: member)
+        return false if !membership.present? || !membership.officer?
+        return membership.update_column(:officer, false)
+      end
+
       def request_membership_in(group)
         MembershipAssociation.new(member: self, group: group).
           create_membership_request
@@ -45,6 +70,11 @@ module Adhocracy
 
       def member_of?(group)
         MembershipAssociation.new(member: self, group: group).verify_membership
+      end
+
+      def officer_of?(group)
+        Adhocracy::Membership.where(member: self, group: group,
+          officer: true).exists?
       end
 
       def invited_to?(group, params = {})
