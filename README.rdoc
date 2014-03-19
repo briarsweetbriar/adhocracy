@@ -61,6 +61,22 @@ And destroy memberships
     @student.leave_group(@club)
     @group.remove_member(@teacher)
 
+=== Officers
+
+Scenario: You want a special class of membership that has the privilege to edit the group and accept/invite new members.
+
+Adhocracy allows for administrative members called officers. You can create a new officer with:
+
+    @club.add_officer(@student)
+
+Alternatively, if `@student` is already a member, you can promote her with:
+
+    @club.promote_to_officer(@student)
+
+Later, you can strip an officer of her title with:
+
+    @club.demote_officer(@student)
+
 === Inviting Members
 
 Scenario: You want your users to have control over which groups they join.

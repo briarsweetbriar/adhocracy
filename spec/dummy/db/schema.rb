@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 20140306214620) do
     t.integer  "member_id"
     t.string   "group_type"
     t.integer  "group_id"
+    t.boolean  "officer",     default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -57,6 +58,7 @@ ActiveRecord::Schema.define(version: 20140306214620) do
   add_index "adhocracy_memberships", ["group_id", "group_type"], name: "adhocracy_membership_requests_on_group", using: :btree
   add_index "adhocracy_memberships", ["group_id", "group_type"], name: "adhocracy_memberships_on_group", using: :btree
   add_index "adhocracy_memberships", ["member_id", "member_type"], name: "adhocracy_memberships_on_member", using: :btree
+  add_index "adhocracy_memberships", ["officer"], name: "index_adhocracy_memberships_on_officer", using: :btree
 
   create_table "adhocs", force: true do |t|
   end
