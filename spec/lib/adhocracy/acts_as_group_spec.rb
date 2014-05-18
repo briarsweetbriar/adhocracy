@@ -233,6 +233,8 @@ module Adhocracy
     context "demotes officers" do
       before :each do
         @adhoc = FactoryGirl.create(:adhoc)
+        @first_officer = FactoryGirl.create(:user)
+        @adhoc.add_officer(@first_officer)
         @user = FactoryGirl.create(:user)
       end
 

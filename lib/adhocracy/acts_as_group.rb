@@ -56,7 +56,8 @@ module Adhocracy
 
       def demote_officer(member)
         membership = Adhocracy::Membership.find_by(member: member, group: self)
-        return false if !membership.present? || !membership.officer?
+        return false if !membership.present? || !membership.officer? ||
+          membership.is_necessary_officer?
         return membership.update_column(:officer, false)
       end
 
